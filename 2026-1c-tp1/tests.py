@@ -8,7 +8,11 @@ class TestTurnos(unittest.TestCase):
         orden, ganancia = turnos([(1, 10), (2, 10)])
         self.assertEqual(orden, [0, 1])
         self.assertEqual(ganancia, 20)
-
+        
+        # Caso dificil.
+        orden2, ganancia2 = turnos([(1,20),(1,10),(5,30),(5,30),(5,30),(5,30)])
+        self.assertEqual(orden2, [2, 3, 4, 5, 0])
+        self.assertEqual(ganancia2, 140)
 
 
 class TestCajas(unittest.TestCase):
