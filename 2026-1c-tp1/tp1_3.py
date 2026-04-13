@@ -46,9 +46,11 @@ def reconstruir_torre(opt, cajas, padres):
     i = opt.index(max(opt))
     while i != -1:
         caja_actual = cajas[i]
-        formato_caja = (caja_actual.id_original, (caja_actual.ancho, caja_actual.largo))
+        # formato_caja = (caja_actual.id_original, (caja_actual.ancho, caja_actual.largo))
+        # resultado.append(formato_caja)
 
-        resultado.append(formato_caja)
+        resultado.append(caja_actual.id_original)
+        resultado.append((caja_actual.ancho, caja_actual.largo))
         i = padres[i]
 
     return resultado
@@ -77,7 +79,3 @@ def main(cajas: Sequence[tuple[float, float, float]]) -> tuple[float, list[tuple
     resultado_final = obtener_altura_maxima(rotaciones)
     
     return resultado_final
-
-
-
-
