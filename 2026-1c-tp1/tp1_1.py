@@ -16,8 +16,7 @@ class Turno:
         return self.horario_limite
 
 
-# Funciones auxiliares:     
-
+# Funciones auxiliares:
 # Inicializamos un array con datos de tipo Turno.
 def inicializar_turnos(turnos):
     turnos_iniciados = []
@@ -27,55 +26,51 @@ def inicializar_turnos(turnos):
         beneficio = turno_i[1]
         turno = Turno(indice,beneficio,horario_limite)
         turnos_iniciados.append(turno)
-        indice += 1    
-        
+        indice += 1
+
     return turnos_iniciados
-    
+
+# Buscamos el horario más cercano al limite posible.
+def buscar_horario_libre(horarios_libres, horario):
+    if horario < 0:
+        return -1
+    if horarios_libres[horario] != horario:
+        horarios_libres[horario] = buscar_horario_libre(horarios_libres, horarios_libres[horario])
+    return horarios_libres[horario]
+
 # Iteramos sobre los turnos ordenados por su beneficio de mayor a menor.
 # Intentamos guardar el turno en el lugar más cercano a su tiempo limite (elección greedy) 
 # para llegar a la solución optima global.
 # Si el horario limite es mas grande que la cantidad de turnos, lo limitamos a la cantidad de turnos.  
-# Mientras esté ocupado el lugar donde intentamos guardar el turno le restamos 1 al horario ideal.
-# Si el horario ideal está disponible lo guardamos.
-def elegir_turnos(turnos_ordenados, horarios_ocupados):
+# Si el horario ideal está disponible lo guardamos, sino lo guardamos en el mas cercano al límite.
+def elegir_turnos(turnos_ordenados, n):
+    horarios_libres = list(range(n))
     turnos_elegidos = []
     beneficio_total = 0
-    
+
     for turno in turnos_ordenados:
         horario_limite = turno.ver_horario_limite()  
         
-        if horario_limite > len(horarios_ocupados):
-            horario_limite = len(horarios_ocupados)
+        if horario_limite > n:
+            horario_limite = n
         
-        horario_ideal = horario_limite-1
+        horario_ideal = buscar_horario_libre(horarios_libres,horario_limite-1)
         
-        while horario_ideal >= 0 and horarios_ocupados[horario_ideal] != None:
-            horario_ideal -= 1
-
-        if horario_ideal < 0:
-            continue
-
-        horarios_ocupados[horario_ideal] = turno
-        
-        beneficio_total += turno.ver_beneficio()
-        turnos_elegidos.append(turno.ver_indice_entrada())
-        
+        if horario_ideal >= 0:
+            turnos_elegidos.append(turno.ver_indice_entrada())
+            beneficio_total += turno.ver_beneficio()
+            horarios_libres[horario_ideal] = horario_ideal - 1            
+            
     return turnos_elegidos,beneficio_total
-    
-    
-# Main:
 
+# Main:
 def main(turnos: list[tuple[int, int]]) -> tuple[list[int], int]:    
     turnos_iniciados = inicializar_turnos(turnos)
 
     # Ordenamos los turnos por el mayor beneficio que nos dan de mayor a menor.
     turnos_ordenados = sorted(turnos_iniciados, key= lambda turno: turno.ver_beneficio(), reverse=True)
     
-    # Creamos una lista para ir guardando los turnos en su lugar y poder chequear si 
-    # ya hay otro turno ocupando ese horario.
-    horarios_ocupados = [None] * len(turnos)
-    
-    turnos_elegidos, beneficio_total = elegir_turnos(turnos_ordenados,horarios_ocupados)
+    turnos_elegidos, beneficio_total = elegir_turnos(turnos_ordenados,len(turnos))
     
     turnos_elegidos = sorted(turnos_elegidos, key=lambda indice: turnos[indice][0])
 
