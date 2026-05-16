@@ -42,15 +42,10 @@ def generar_rotaciones(caja_tuplas):
 def reconstruir_torre(opt, cajas, padres):
     resultado = []
 
-
     i = opt.index(max(opt))
     while i != -1:
         caja_actual = cajas[i]
-        # formato_caja = (caja_actual.id_original, (caja_actual.ancho, caja_actual.largo))
-        # resultado.append(formato_caja)
-
-        resultado.append(caja_actual.id_original)
-        resultado.append((caja_actual.ancho, caja_actual.largo))
+        resultado.append((caja_actual.id_original, (caja_actual.ancho, caja_actual.largo)))
         i = padres[i]
 
     return resultado
