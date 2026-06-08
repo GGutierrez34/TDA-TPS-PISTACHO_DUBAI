@@ -87,7 +87,7 @@ def modelar_grafo(relaciones: list[tuple[int, int]], g):
         g.agregar_capacidad(inicio, fin, capacidad)
         
         if (fin,inicio) not in g.capacidades:
-            g.agregar_capacidad(fin, inicio, 0)
+            g.agregar_capacidad(fin, inicio, capacidad)
 
 
 def main(s1: int, s2: int, relaciones: list[tuple[int, int, int]]) -> tuple[set[int], set[int]]:
